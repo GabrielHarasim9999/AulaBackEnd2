@@ -30,7 +30,7 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
             }
 
         }
-        return null;
+        return produto;
     }
 
     @Override
