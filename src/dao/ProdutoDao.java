@@ -4,6 +4,7 @@ import config.ConnectionFactory;
 import model.Produto;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,20 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public List<Produto> listarTodos() throws SQLException {
-        return List.of();
+        String sql ="SELECT id, nome, preco, quantidade ORDER BY id";
+        List<Produto> produtos = new ArrayList<>();
+
+        try(Connection conexao = ConnectionFactory.abrirConexao();
+        PreparedStatement comando = conexao.prepareStatement(sql);
+        ResultSet resultado = comando.executeQuery()){
+            while (resultado.next()){
+                produtos.add(mapear(resultado));
+            }
+
+        }
+
+
+        return produtos;
     }
 
     @Override
@@ -51,5 +65,14 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
     @Override
     public boolean excluir(Long i) throws SQLException {
         return false;
+    }
+
+    private Produto mapear(ResultSet resultado) throws  SQLException{
+        return new Produto(
+        resultado.getLong("id"),
+        resultado.getString("nome"),
+        resultado.getDouble("preco"),
+        resultado.getInt("quantidade")
+        );
     }
 }
