@@ -35,8 +35,23 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
     }
 
     @Override
-    public Optional<Produto> buscarPorId(Long i) throws SQLException {
-        return Optional.empty();
+    public Optional<Produto> buscarPorId(Long id) throws SQLException {
+        String sql ="SELECT id, nome, preco, quantidade FROM produtos WHERE id = ?";
+
+        try(
+
+                Connection conexao = ConnectionFactory.abrirConexao();
+                PreparedStatement comando = conexao.prepareStatement(sql)
+        ){
+
+            comando.setLong(1,id);
+
+            try (ResultSet resultado = comando.executeQuery()){
+                return resultado.next() ? Optional.of((mapear(resultado))):Optional.empty();
+
+            }
+        }
+
     }
 
     @Override
@@ -63,8 +78,17 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
     }
 
     @Override
-    public boolean excluir(Long i) throws SQLException {
-        return false;
+    public boolean excluir(Long id) throws SQLException {
+        String sql ="DELETE FROM produtos WHERE id = ?";
+
+        try(
+
+                Connection conexao = ConnectionFactory.abrirConexao();
+                PreparedStatement comando = conexao.prepareStatement(sql)
+        ){
+            comando.setLong(1, id);
+            return comando.executeUpdate() > 0;
+        }
     }
 
     private Produto mapear(ResultSet resultado) throws  SQLException{
