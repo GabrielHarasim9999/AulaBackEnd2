@@ -73,8 +73,22 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
     }
 
     @Override
-    public boolean atualizar(Produto entidade) throws SQLException {
-        return false;
+    public boolean atualizar(Produto produto) throws SQLException {
+        if(produto.getId() == null){
+            throw new IllegalArgumentException("O produto precisa ter um id para ser alterado");
+        }
+
+        String sql ="UPDATE produtos SET nome = ?, preço, quantidade =? WHERE id =?";
+
+        try(Connection conexao =ConnectionFactory.abrirConexao();
+        PreparedStatement comando = conexao.prepareStatement(sql)
+        ){
+            comando.setString(1, produto.getNome());
+            comando.setDouble(2, produto.getPreco());
+            comando.setInt(3, produto.getQuantidade());
+            comando.setLong(4, produto.getId());
+            return comando.executeUpdate() > 0;
+        }
     }
 
     @Override

@@ -44,4 +44,9 @@ public class Produto {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
+    @Override
+    public String toString(){
+        return "Produto: id=%d, nome=%s, preco=%s, quantidade=%d"
+                .formatted(id, nome, preco, quantidade);
+    }
 }
