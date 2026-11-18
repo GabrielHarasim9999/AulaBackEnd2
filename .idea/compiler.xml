@@ -14,7 +14,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-loja" options="" />
-      <module name="aula-exemplo-mysql" options="-parameters" />
+      <module name="aula-exemplo-mysql" options="" />
     </option>
   </component>
 </project>
