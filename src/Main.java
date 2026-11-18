@@ -2,14 +2,13 @@ import dao.ProdutoDao;
 import model.Produto;
 
 import java.sql.SQLException;
-import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
         ProdutoDao produtoDao = new ProdutoDao();
 
         try{
-            Produto produto = new Produto(00001L, "Banana prata", 6.50, 10);
+            Produto produto = new Produto(1L, "Banana prata", 6.50, 10);
 
             produtoDao.criar(produto);
             System.out.println("Criado: "+ produto);

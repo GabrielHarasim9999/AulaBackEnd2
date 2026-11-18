@@ -43,7 +43,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.6.2</version>
                 <configuration>
-                    <mainClass>api.ApiMain</mainClass>
+                    <mainClass>API.ApiMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>

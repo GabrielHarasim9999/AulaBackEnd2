@@ -15,16 +15,17 @@ public class ApiMain {
         ProdutoDao produtoDao = new ProdutoDao();
 
 
-        int porta = Integer.parseInt(System.getenv().getOrDefault("API_PORT", "7070"));
+        int porta = lerPorta();
 
         Javalin app = Javalin.create(config -> {
             config.routes.get("/", ctx -> ctx.json(Map.of("aplicacao", "Aula Exemplo API", "status", "online")));
 
             config.routes.get("/API/produtos", ctx -> executar(ctx, () -> ctx.json(produtoDao.listarTodos())));
 
-            config.routes.get("API/produtos/{id}", ctx ->executar(ctx, ()->{
+            config.routes.get("/API/produtos/{id}", ctx -> executar(ctx, () -> {
                 Long id =Long.parseLong(ctx.pathParam("id"));
-                Produto produto = produtoDao.buscarPorId(id).orElseThrow(()->new NoSuchElementException(("Produto não encontrado")));
+                Produto produto = produtoDao.buscarPorId(id)
+                        .orElseThrow(() -> new NoSuchElementException("Produto não encontrado"));
                 ctx.json(produto);
             }));
 
@@ -37,7 +38,7 @@ public class ApiMain {
 
             config.routes.put("/API/produtos/{id}", ctx->executar(ctx,()->{
                 Long id = Long.parseLong(ctx.pathParam("id"));
-                ProdutoRequest request = ctx.bodyAsClass((ProdutoRequest.class));
+                ProdutoRequest request = ctx.bodyAsClass(ProdutoRequest.class);
                 Produto produto = new Produto(id, request.nome(), request.preco(), request.quantidade());
                 if (!produtoDao.atualizar(produto)){
                     throw new NoSuchElementException("Produto não encontrado!");
@@ -45,7 +46,7 @@ public class ApiMain {
                 ctx.json(produto);
             }));
 
-            config.routes.delete("/api/produtos/{id}", ctx->executar(ctx, ()->{
+            config.routes.delete("/API/produtos/{id}", ctx -> executar(ctx, () -> {
                 Long id = Long.parseLong(ctx.pathParam("id"));
                 if(!produtoDao.excluir(id)){
                     throw new NoSuchElementException("Produto não encontrado!");
@@ -75,6 +76,19 @@ public class ApiMain {
         } catch (Exception e) {
             ctx.status(500).json(Map.of("erro", "Erro interno da API"));
             e.printStackTrace();
+        }
+    }
+
+    private static int lerPorta() {
+        String valor = System.getenv().getOrDefault("API_PORT", "7070");
+        try {
+            int porta = Integer.parseInt(valor);
+            if (porta < 1 || porta > 65535) {
+                throw new IllegalArgumentException();
+            }
+            return porta;
+        } catch (IllegalArgumentException e) {
+            return 7070;
         }
     }
 

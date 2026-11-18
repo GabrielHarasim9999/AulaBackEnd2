@@ -30,6 +30,9 @@ public class Produto {
     }
 
     public void setNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("O nome do produto é obrigatório");
+        }
         this.nome = nome;
     }
 
@@ -38,6 +41,9 @@ public class Produto {
     }
 
     public void setPreco(Double preco) {
+        if (preco == null || preco < 0) {
+            throw new IllegalArgumentException("O preço não pode ser negativo");
+        }
         this.preco = preco;
     }
 
@@ -46,6 +52,9 @@ public class Produto {
     }
 
     public void setQuantidade(int quantidade) {
+        if (quantidade < 0) {
+            throw new IllegalArgumentException("A quantidade não pode ser negativa");
+        }
         this.quantidade = quantidade;
     }
     @Override

@@ -13,7 +13,7 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public Produto criar(Produto produto) throws SQLException {
-        String sql ="INSERT INTO produtos (nome, preço, quantidade) VALUES(?,?,?)";
+        String sql ="INSERT INTO produtos (nome, preco, quantidade) VALUES(?,?,?)";
 
         try(Connection conexao = ConnectionFactory.abrirConexao();
             PreparedStatement comando = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
@@ -56,7 +56,7 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public List<Produto> listarTodos() throws SQLException {
-        String sql ="SELECT id, nome, preco, quantidade ORDER BY id";
+        String sql ="SELECT id, nome, preco, quantidade FROM produtos ORDER BY id";
         List<Produto> produtos = new ArrayList<>();
 
         try(Connection conexao = ConnectionFactory.abrirConexao();
@@ -78,7 +78,7 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
             throw new IllegalArgumentException("O produto precisa ter um id para ser alterado");
         }
 
-        String sql ="UPDATE produtos SET nome = ?, preço, quantidade =? WHERE id =?";
+        String sql ="UPDATE produtos SET nome = ?, preco = ?, quantidade = ? WHERE id = ?";
 
         try(Connection conexao =ConnectionFactory.abrirConexao();
         PreparedStatement comando = conexao.prepareStatement(sql)
