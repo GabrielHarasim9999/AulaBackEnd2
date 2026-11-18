@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProdutoDao  implements  CrudDao<Produto, Long>{
+public class ProdutoDao implements CrudDao<Produto, Long> {
 
 
     @Override
     public Produto criar(Produto produto) throws SQLException {
-        String sql ="INSERT INTO produtos (nome, preco, quantidade) VALUES(?,?,?)";
+        String sql = "INSERT INTO produtos (nome, preco, quantidade) VALUES(?,?,?)";
 
-        try(Connection conexao = ConnectionFactory.abrirConexao();
-            PreparedStatement comando = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        try (Connection conexao = ConnectionFactory.abrirConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             comando.setString(1, produto.getNome());
             comando.setDouble(2, produto.getPreco());
@@ -24,8 +24,8 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
             comando.executeUpdate();
 
 
-            try(ResultSet chaves = comando.getGeneratedKeys()){
-                if (chaves.next()){
+            try (ResultSet chaves = comando.getGeneratedKeys()) {
+                if (chaves.next()) {
                     produto.setId(chaves.getLong(1));
                 }
             }
@@ -36,18 +36,18 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public Optional<Produto> buscarPorId(Long id) throws SQLException {
-        String sql ="SELECT id, nome, preco, quantidade FROM produtos WHERE id = ?";
+        String sql = "SELECT id, nome, preco, quantidade FROM produtos WHERE id = ?";
 
-        try(
+        try (
 
                 Connection conexao = ConnectionFactory.abrirConexao();
                 PreparedStatement comando = conexao.prepareStatement(sql)
-        ){
+        ) {
 
-            comando.setLong(1,id);
+            comando.setLong(1, id);
 
-            try (ResultSet resultado = comando.executeQuery()){
-                return resultado.next() ? Optional.of((mapear(resultado))):Optional.empty();
+            try (ResultSet resultado = comando.executeQuery()) {
+                return resultado.next() ? Optional.of((mapear(resultado))) : Optional.empty();
 
             }
         }
@@ -56,13 +56,13 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public List<Produto> listarTodos() throws SQLException {
-        String sql ="SELECT id, nome, preco, quantidade FROM produtos ORDER BY id";
+        String sql = "SELECT id, nome, preco, quantidade FROM produtos ORDER BY id";
         List<Produto> produtos = new ArrayList<>();
 
-        try(Connection conexao = ConnectionFactory.abrirConexao();
-        PreparedStatement comando = conexao.prepareStatement(sql);
-        ResultSet resultado = comando.executeQuery()){
-            while (resultado.next()){
+        try (Connection conexao = ConnectionFactory.abrirConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql);
+             ResultSet resultado = comando.executeQuery()) {
+            while (resultado.next()) {
                 produtos.add(mapear(resultado));
             }
 
@@ -74,15 +74,15 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public boolean atualizar(Produto produto) throws SQLException {
-        if(produto.getId() == null){
+        if (produto.getId() == null) {
             throw new IllegalArgumentException("O produto precisa ter um id para ser alterado");
         }
 
-        String sql ="UPDATE produtos SET nome = ?, preco = ?, quantidade = ? WHERE id = ?";
+        String sql = "UPDATE produtos SET nome = ?, preco = ?, quantidade = ? WHERE id = ?";
 
-        try(Connection conexao =ConnectionFactory.abrirConexao();
-        PreparedStatement comando = conexao.prepareStatement(sql)
-        ){
+        try (Connection conexao = ConnectionFactory.abrirConexao();
+             PreparedStatement comando = conexao.prepareStatement(sql)
+        ) {
             comando.setString(1, produto.getNome());
             comando.setDouble(2, produto.getPreco());
             comando.setInt(3, produto.getQuantidade());
@@ -93,24 +93,24 @@ public class ProdutoDao  implements  CrudDao<Produto, Long>{
 
     @Override
     public boolean excluir(Long id) throws SQLException {
-        String sql ="DELETE FROM produtos WHERE id = ?";
+        String sql = "DELETE FROM produtos WHERE id = ?";
 
-        try(
+        try (
 
                 Connection conexao = ConnectionFactory.abrirConexao();
                 PreparedStatement comando = conexao.prepareStatement(sql)
-        ){
+        ) {
             comando.setLong(1, id);
             return comando.executeUpdate() > 0;
         }
     }
 
-    private Produto mapear(ResultSet resultado) throws  SQLException{
+    private Produto mapear(ResultSet resultado) throws SQLException {
         return new Produto(
-        resultado.getLong("id"),
-        resultado.getString("nome"),
-        resultado.getDouble("preco"),
-        resultado.getInt("quantidade")
+                resultado.getLong("id"),
+                resultado.getString("nome"),
+                resultado.getDouble("preco"),
+                resultado.getInt("quantidade")
         );
     }
 }

@@ -6,18 +6,19 @@ public class Produto {
     private Double preco;
     private int quantidade;
 
-    public Produto(String nome, Double preco, int quantidade){
+    public Produto(String nome, Double preco, int quantidade) {
 
-        this(null, nome ,preco, quantidade);
+        this(null, nome, preco, quantidade);
     }
 
-    public Produto(Long id , String nome, Double preco, int quantidade){
+    public Produto(Long id, String nome, Double preco, int quantidade) {
         this.id = id;
         setNome(nome);
         setPreco(preco);
         setQuantidade(quantidade);
     }
-    public Long getId(){
+
+    public Long getId() {
         return id;
     }
 
@@ -57,8 +58,9 @@ public class Produto {
         }
         this.quantidade = quantidade;
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "Produto: id=%d, nome=%s, preco=%s, quantidade=%d"
                 .formatted(id, nome, preco, quantidade);
     }
