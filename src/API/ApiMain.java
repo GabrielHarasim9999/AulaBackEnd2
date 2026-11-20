@@ -20,23 +20,23 @@ public class ApiMain {
         Javalin app = Javalin.create(config -> {
             config.routes.get("/", ctx -> ctx.json(Map.of("aplicacao", "Aula Exemplo API", "status", "online")));
 
-            config.routes.get("/API/produtos", ctx -> executar(ctx, () -> ctx.json(produtoDao.listarTodos())));
+            config.routes.get("/API/produto", ctx -> executar(ctx, () -> ctx.json(produtoDao.listarTodos())));
 
-            config.routes.get("/API/produtos/{id}", ctx -> executar(ctx, () -> {
+            config.routes.get("/API/produto/{id}", ctx -> executar(ctx, () -> {
                 Long id = Long.parseLong(ctx.pathParam("id"));
                 Produto produto = produtoDao.buscarPorId(id)
                         .orElseThrow(() -> new NoSuchElementException("Produto não encontrado"));
                 ctx.json(produto);
             }));
 
-            config.routes.post("/API/produtos", ctx -> executar(ctx, () -> {
+            config.routes.post("/API/produto", ctx -> executar(ctx, () -> {
                 ProdutoRequest request = ctx.bodyAsClass(ProdutoRequest.class);
                 Produto produto = new Produto(request.nome(), request.preco(), request.quantidade());
 
                 ctx.status(201).json(produtoDao.criar(produto));
             }));
 
-            config.routes.put("/API/produtos/{id}", ctx -> executar(ctx, () -> {
+            config.routes.put("/API/produto/{id}", ctx -> executar(ctx, () -> {
                 Long id = Long.parseLong(ctx.pathParam("id"));
                 ProdutoRequest request = ctx.bodyAsClass(ProdutoRequest.class);
                 Produto produto = new Produto(id, request.nome(), request.preco(), request.quantidade());
@@ -46,7 +46,7 @@ public class ApiMain {
                 ctx.json(produto);
             }));
 
-            config.routes.delete("/API/produtos/{id}", ctx -> executar(ctx, () -> {
+            config.routes.delete("/API/produto/{id}", ctx -> executar(ctx, () -> {
                 Long id = Long.parseLong(ctx.pathParam("id"));
                 if (!produtoDao.excluir(id)) {
                     throw new NoSuchElementException("Produto não encontrado!");
